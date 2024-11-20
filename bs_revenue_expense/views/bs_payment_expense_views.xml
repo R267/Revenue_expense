@@ -1,0 +1,15 @@
+<odoo>
+    <record id="view_bs_payment_expense_tree" model="ir.ui.view">
+        <field name="name">bs.payment.expense.tree</field>
+        <field name="model">bs.payment.expense</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="product_id"/>
+                <field name="total_amount"/>
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="cost_item_id"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

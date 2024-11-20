@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bs_cost_item,access_bs_cost_item,model_bs_cost_item,,1,1,1,1
+access_bs_cost_item_department,access_bs_cost_item_department,model_bs_cost_item_department,,1,1,1,1
+access_bs_payment_expense,access_bs_payment_expense,model_bs_payment_expense,,1,1,1,1
