@@ -51,8 +51,8 @@ class AccountPayment(models.Model):
                             'payment_id': payment.id,
                             'product_id': line.product_id.id,
                             'total_amount': expense_amount,
-                            'department_id': line.department_id.id,  # Заміна з line.product_id.department_id
-                            'cost_item_id': line.cost_item_id.id,  # Заміна з line.product_id.cost_item_id
+                            'department_id': line.department_id.id, 
+                            'cost_item_id': line.cost_item_id.id,  
                             'name': line.name,
                         })
 
