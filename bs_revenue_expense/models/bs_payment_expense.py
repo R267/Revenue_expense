@@ -59,9 +59,15 @@ class AccountPayment(models.Model):
                             'payment_id': payment.id,
                             'product_id': line.product_id.id,
                             'total_amount': expense_amount,
+<<<<<<< HEAD
                             'department_id': line.department_id.id,  # Використовує department_id із рядка
                             'cost_item_id': line.cost_item_id.id,  # Використовує cost_item_id із рядка
                             'label': line.name or _('No Label'),
+=======
+                            'department_id': line.department_id.id, 
+                            'cost_item_id': line.cost_item_id.id,  
+                            'name': line.name,
+>>>>>>> ae9298b590759b21de3a025411cba7e009930712
                         })
 
     def action_populate_expenses(self):
