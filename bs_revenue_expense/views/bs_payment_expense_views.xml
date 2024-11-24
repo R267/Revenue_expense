@@ -6,7 +6,7 @@
             <tree>
                 <field name="product_id"/>
                 <field name="total_amount"/>
-                <field name="name"/>
+                <field name="label"/>
                 <field name="department_id"/>
                 <field name="cost_item_id"/>
             </tree>

@@ -1,16 +1,17 @@
 <odoo>
-    <record id="view_account_payment_form_inherit" model="ir.ui.view">
+        <record id="view_account_payment_form_inherit" model="ir.ui.view">
         <field name="name">account.payment.form.inherit</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
+            <!-- Додаємо вкладку Expenses, тільки якщо рахунок типу in_invoice -->
             <xpath expr="//form/sheet" position="inside">
                 <notebook>
-                    <page string="Expenses">
+                    <page string="Expenses" visible="[(record.move_type, '=', 'in_invoice')]">
                         <field name="expense_ids">
-                            <tree>
+                            <tree editable="bottom">
                                 <field name="product_id"/>
-                                <field name="name"/>
+                                <field name="label"/>
                                 <field name="total_amount"/>
                                 <field name="department_id"/>
                                 <field name="cost_item_id"/>
@@ -19,20 +20,23 @@
                     </page>
                 </notebook>
             </xpath>
+            <!-- Додаємо кнопку Populate Expenses, тільки якщо рахунок типу in_invoice -->
             <xpath expr="//header" position="inside">
                 <button name="action_populate_expenses"
                         type="object"
                         string="Populate Expenses"
                         class="btn-primary"
-                        visible="state != 'draft'"/>
+                        icon="fa-refresh"
+                        visible="[(record.move_type, '=', 'in_invoice')]"/>
             </xpath>
         </field>
     </record>
-    <record id="view_move_form_inherit" model="ir.ui.view">
+       <record id="view_move_form_inherit" model="ir.ui.view">
         <field name="name">account.move.form.inherit</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <!-- Зміни для поля line_ids -->
             <xpath expr="//field[@name='line_ids']" position="attributes">
                 <attribute name="optional">height</attribute>
             </xpath>
@@ -40,11 +44,30 @@
                 <field name="department_id" optional="hide"/>
                 <field name="cost_item_id" optional="hide"/>
             </xpath>
+            <!-- Зміни для поля invoice_line_ids -->
             <xpath expr="//field[@name='invoice_line_ids']/tree" position="inside">
                 <field name="department_id" optional="hide"/>
                 <field name="cost_item_id" optional="hide"/>
             </xpath>
+            <!-- Додаємо поля department_id та cost_item_id на вкладку Other Info -->
+            <xpath expr="//page[@name='other_info']" position="inside">
+                <group>
+                    <field name="department_id"/>
+                    <field name="cost_item_id"/>
+                </group>
+                <!-- Кнопки для заповнення -->
+                <div class="oe_button_box" name="button_box" style="opacity: 0.8;">
+                    <button name="action_fill_all_lines"
+                            string="Fill in all lines"
+                            type="object"
+                            class="btn-primary"
+                            style="margin-right: 30px;"/>
+                    <button name="action_fill_empty_lines"
+                            string="Fill in the blank lines"
+                            type="object"
+                            class="btn-secondary"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
-

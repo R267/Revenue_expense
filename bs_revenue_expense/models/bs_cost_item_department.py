@@ -20,3 +20,7 @@ class BSCostItemDepartment(models.Model):
         string=_("Percentage"),
         required=True
     )
+
+    _sql_constraints = [
+        ('percent_check', 'CHECK(percent >= 0 AND percent <= 100)', "The percentage must be between 0 and 100."),
+    ]

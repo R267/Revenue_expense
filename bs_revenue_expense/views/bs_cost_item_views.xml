@@ -1,17 +1,14 @@
 <odoo>
-
     <record id="action_bs_cost_item" model="ir.actions.act_window">
         <field name="name">Cost Items</field>
         <field name="res_model">bs.cost.item</field>
         <field name="view_mode">tree,form</field>
     </record>
-
     <menuitem id="menu_bs_cost_item"
               name="Cost Items"
               parent="account.menu_finance_configuration"
               action="action_bs_cost_item"
               sequence="999"/>
-
     <record id="view_bs_cost_item_tree" model="ir.ui.view">
         <field name="name">bs.cost.item.tree</field>
         <field name="model">bs.cost.item</field>
@@ -22,7 +19,6 @@
             </tree>
         </field>
     </record>
-
     <record id="view_cost_item_form" model="ir.ui.view">
         <field name="name">bs.cost.item.form</field>
         <field name="model">bs.cost.item</field>

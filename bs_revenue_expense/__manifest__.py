@@ -20,5 +20,6 @@
         'views/product_product_views.xml',
         'views/account_payment_views.xml',
         'views/hr_department_views.xml',
+        'views/bs_payment_expense_entry_views.xml',
     ],
 }

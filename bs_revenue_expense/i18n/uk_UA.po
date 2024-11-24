@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-20 20:43+0000\n"
-"PO-Revision-Date: 2024-11-20 20:43+0000\n"
+"POT-Creation-Date: 2024-11-24 21:28+0000\n"
+"PO-Revision-Date: 2024-11-24 21:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,20 +36,30 @@ msgid "Allocate to Departments"
 msgstr "Розподіл на відділи"
 
 #. module: bs_revenue_expense
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__amount
+msgid "Amount"
+msgstr "Сума"
+
+#. module: bs_revenue_expense
 #: model:ir.model,name:bs_revenue_expense.model_bs_cost_item
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_account_bank_statement_line__cost_item_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_account_move__cost_item_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_account_move_line__cost_item_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_account_payment__cost_item_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__cost_item_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__cost_item_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__cost_item_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_product_product__cost_item_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_product_template__cost_item_id
 #: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_cost_item_form
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_payment_expense_entry_filter
 msgid "Cost Item"
 msgstr "Стаття витрат"
 
 #. module: bs_revenue_expense
 #: model:ir.model,name:bs_revenue_expense.model_bs_cost_item_department
 msgid "Cost Item Department Allocation"
-msgstr ""
+msgstr "Стаття витрат Розподіл між відділами"
 
 #. module: bs_revenue_expense
 #: model:ir.actions.act_window,name:bs_revenue_expense.action_bs_cost_item
@@ -61,34 +71,47 @@ msgstr "Стаття витрат"
 #: model:ir.model.fields,help:bs_revenue_expense.field_product_product__cost_item_id
 #: model:ir.model.fields,help:bs_revenue_expense.field_product_template__cost_item_id
 msgid "Cost item associated with the product."
-msgstr ""
+msgstr "Стаття витрат, пов'язана з продуктом."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,help:bs_revenue_expense.field_account_move_line__cost_item_id
 msgid "Cost item linked to this line."
-msgstr ""
+msgstr "Стаття витрат, пов'язана з цим рядком."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__create_uid
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__create_uid
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__create_uid
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Створено"
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__create_date
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__create_date
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__create_date
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Створено на"
+
+#. module: bs_revenue_expense
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__date
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_payment_expense_entry_filter
+msgid "Date"
+msgstr "Дата"
 
 #. module: bs_revenue_expense
 #: model:ir.model,name:bs_revenue_expense.model_hr_department
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_account_bank_statement_line__department_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_account_move__department_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_account_move_line__department_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_account_payment__department_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__department_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__department_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__department_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_product_product__department_id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_product_template__department_id
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_payment_expense_entry_filter
 msgid "Department"
 msgstr "Відділ"
 
@@ -96,12 +119,12 @@ msgstr "Відділ"
 #: model:ir.model.fields,help:bs_revenue_expense.field_product_product__department_id
 #: model:ir.model.fields,help:bs_revenue_expense.field_product_template__department_id
 msgid "Department associated with the product."
-msgstr ""
+msgstr "Відділ, пов'язаний з продуктом."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,help:bs_revenue_expense.field_account_move_line__department_id
 msgid "Department linked to this line."
-msgstr ""
+msgstr "Відділ, пов'язаний з цією лінією."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__department_ids
@@ -117,23 +140,24 @@ msgstr "Опис"
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__display_name
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__display_name
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__display_name
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__display_name
 msgid "Display Name"
-msgstr "Назва"
+msgstr "Ім'я користувача"
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,help:bs_revenue_expense.field_bs_cost_item__allocate_to_departments
 msgid "Enable allocation to departments."
-msgstr ""
+msgstr "Увімкніть розподіл за відділами."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,help:bs_revenue_expense.field_hr_department__allocate_expenses
 msgid "Enable expense allocation for this department."
-msgstr ""
+msgstr "Увімкніть розподіл витрат для цього відділу."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,help:bs_revenue_expense.field_hr_department__allocate_revenues
 msgid "Enable revenue allocation for this department."
-msgstr ""
+msgstr "Увімкніть розподіл доходів для цього відділу."
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_account_payment__expense_ids
@@ -142,11 +166,27 @@ msgid "Expenses"
 msgstr "Витрати"
 
 #. module: bs_revenue_expense
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_move_form_inherit
+msgid "Fill in all lines"
+msgstr "Заповнення в усіх рядках"
+
+#. module: bs_revenue_expense
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_move_form_inherit
+msgid "Fill in the blank lines"
+msgstr "Заповнення в пустих рядках"
+
+#. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__id
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
+
+#. module: bs_revenue_expense
+#: model:ir.model,name:bs_revenue_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Запис у журналі"
 
 #. module: bs_revenue_expense
 #: model:ir.model,name:bs_revenue_expense.model_account_move_line
@@ -154,27 +194,39 @@ msgid "Journal Item"
 msgstr "Елемент журналу"
 
 #. module: bs_revenue_expense
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__label
+msgid "Label"
+msgstr "Мітка"
+
+#. module: bs_revenue_expense
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_payment_expense_entry_filter
+msgid "Last 30 Days"
+msgstr "Останні 30 днів"
+
+#. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__write_uid
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__write_uid
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__write_uid
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Останнє оновлення"
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__write_date
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item_department__write_date
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__write_date
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Останнє оновлення на"
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_cost_item__name
-#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__name
 msgid "Name"
-msgstr "Мітка"
+msgstr "Назва"
 
 #. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__payment_id
+#: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense_entry__account_payment_id
 msgid "Payment"
 msgstr "Оплата"
 
@@ -182,6 +234,11 @@ msgstr "Оплата"
 #: model:ir.model,name:bs_revenue_expense.model_bs_payment_expense
 msgid "Payment Expense"
 msgstr "Витрати на оплату"
+
+#. module: bs_revenue_expense
+#: model:ir.model,name:bs_revenue_expense.model_bs_payment_expense_entry
+msgid "Payment Expense Entry"
+msgstr "Введення витрат на оплату"
 
 #. module: bs_revenue_expense
 #: model:ir.model,name:bs_revenue_expense.model_account_payment
@@ -205,11 +262,31 @@ msgid "Product"
 msgstr "Товар"
 
 #. module: bs_revenue_expense
+#: model:ir.ui.menu,name:bs_revenue_expense.menu_report_expenses
+msgid "Report on expenses"
+msgstr "Звіт по витратах"
+
+#. module: bs_revenue_expense
 #: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_department_form_inherit
 msgid "Revenue and Expense Allocation"
 msgstr "Розподіл доходів і витрат"
 
 #. module: bs_revenue_expense
+#: model:ir.model.constraint,message:bs_revenue_expense.constraint_bs_cost_item_department_percent_check
+msgid "The percentage must be between 0 and 100."
+msgstr "Відсоток повинен бути в межах від 0 до 100."
+
+#. module: bs_revenue_expense
+#: model_terms:ir.ui.view,arch_db:bs_revenue_expense.view_payment_expense_entry_filter
+msgid "This Month"
+msgstr "Цього місяця"
+
+#. module: bs_revenue_expense
 #: model:ir.model.fields,field_description:bs_revenue_expense.field_bs_payment_expense__total_amount
 msgid "Total Amount"
 msgstr "Загальна сума"
+
+#. module: bs_revenue_expense
+#: model:ir.actions.act_window,name:bs_revenue_expense.action_report_expenses
+msgid "Report on expenses"
+msgstr "Звіт по витратах"
