@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-
+from odoo.exceptions import UserError
 
 class BSPaymentExpense(models.Model):
     _name = 'bs.payment.expense'
@@ -59,15 +59,9 @@ class AccountPayment(models.Model):
                             'payment_id': payment.id,
                             'product_id': line.product_id.id,
                             'total_amount': expense_amount,
-<<<<<<< HEAD
                             'department_id': line.department_id.id,  # Використовує department_id із рядка
                             'cost_item_id': line.cost_item_id.id,  # Використовує cost_item_id із рядка
                             'label': line.name or _('No Label'),
-=======
-                            'department_id': line.department_id.id, 
-                            'cost_item_id': line.cost_item_id.id,  
-                            'name': line.name,
->>>>>>> ae9298b590759b21de3a025411cba7e009930712
                         })
 
     def action_populate_expenses(self):
@@ -107,6 +101,18 @@ class AccountMove(models.Model):
                 line.department_id = record.department_id.id
                 line.cost_item_id = record.cost_item_id.id
 
+        # Показати повідомлення після заповнення всіх рядків
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('All lines have been filled successfully with department and cost item.'),
+                'sticky': False,
+                'type': 'success',
+            }
+        }
+
     def action_fill_empty_lines(self):
         """Заповнити department_id і cost_item_id тільки в рядках, де вони порожні."""
         for record in self:
@@ -115,3 +121,15 @@ class AccountMove(models.Model):
                     line.department_id = record.department_id.id
                 if not line.cost_item_id:
                     line.cost_item_id = record.cost_item_id.id
+
+        # Показати повідомлення після заповнення порожніх рядків
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('Empty lines have been filled successfully with department and cost item.'),
+                'sticky': False,
+                'type': 'success',
+            }
+        }

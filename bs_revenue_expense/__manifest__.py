@@ -22,4 +22,6 @@
         'views/hr_department_views.xml',
         'views/bs_payment_expense_entry_views.xml',
     ],
+    'installable': True,
+    'application': True,
 }

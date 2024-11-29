@@ -1,37 +1,38 @@
 <odoo>
-        <record id="view_account_payment_form_inherit" model="ir.ui.view">
-        <field name="name">account.payment.form.inherit</field>
-        <field name="model">account.payment</field>
-        <field name="inherit_id" ref="account.view_account_payment_form"/>
-        <field name="arch" type="xml">
-            <!-- Додаємо вкладку Expenses, тільки якщо рахунок типу in_invoice -->
-            <xpath expr="//form/sheet" position="inside">
-                <notebook>
-                    <page string="Expenses" visible="[(record.move_type, '=', 'in_invoice')]">
-                        <field name="expense_ids">
-                            <tree editable="bottom">
-                                <field name="product_id"/>
-                                <field name="label"/>
-                                <field name="total_amount"/>
-                                <field name="department_id"/>
-                                <field name="cost_item_id"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
-            </xpath>
-            <!-- Додаємо кнопку Populate Expenses, тільки якщо рахунок типу in_invoice -->
-            <xpath expr="//header" position="inside">
-                <button name="action_populate_expenses"
-                        type="object"
-                        string="Populate Expenses"
-                        class="btn-primary"
-                        icon="fa-refresh"
-                        visible="[(record.move_type, '=', 'in_invoice')]"/>
-            </xpath>
-        </field>
-    </record>
-       <record id="view_move_form_inherit" model="ir.ui.view">
+    <record id="view_account_payment_form_inherit" model="ir.ui.view">
+    <field name="name">account.payment.form.inherit</field>
+    <field name="model">account.payment</field>
+    <field name="inherit_id" ref="account.view_account_payment_form"/>
+    <field name="arch" type="xml">
+        <!-- Add the Expenses tab with the specified conditions -->
+        <xpath expr="//form/sheet" position="inside">
+            <notebook>
+                <page string="Expenses"
+                      visible="[(partner_type, '=', 'supplier'), ('is_internal_transfer', '=', False)]">
+                    <field name="expense_ids">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="label"/>
+                            <field name="total_amount"/>
+                            <field name="department_id"/>
+                            <field name="cost_item_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </xpath>
+        <!-- Add the Populate Expenses button with the specified conditions -->
+        <xpath expr="//header" position="inside">
+            <button name="action_populate_expenses"
+                    type="object"
+                    string="Populate Expenses"
+                    class="btn-primary"
+                    icon="fa-refresh"
+                    visible="[(partner_type, '=', 'supplier'), ('is_internal_transfer', '=', False)]"/>
+        </xpath>
+    </field>
+</record>
+    <record id="view_move_form_inherit" model="ir.ui.view">
         <field name="name">account.move.form.inherit</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
