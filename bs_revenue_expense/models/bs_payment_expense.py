@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+import logging
+_logger = logging.getLogger(__name__)
 
 class BSPaymentExpense(models.Model):
     _name = 'bs.payment.expense'
@@ -13,11 +14,13 @@ class BSPaymentExpense(models.Model):
     label = fields.Char(string=_("Label"), required=True)
 
 
+
 class ProductProduct(models.Model):
     _inherit = 'product.template'
 
     department_id = fields.Many2one('hr.department', string=_("Department"), help="Department associated with the product.")
     cost_item_id = fields.Many2one('bs.cost.item', string=_("Cost Item"), help="Cost item associated with the product.")
+
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
@@ -26,110 +29,119 @@ class AccountPayment(models.Model):
         'bs.payment.expense', 'payment_id', string=_("Expenses")
     )
 
+    def action_post(self):
+        """When the payment is posted, create expense entries."""
+        result = super(AccountPayment, self).action_post()
+        for payment in self:
+            if payment.partner_type == 'supplier':  # Only for supplier payments
+                payment._populate_expenses()
+                payment._create_expense_entries()
+        return result
+
+    def button_draft(self):
+        """When the payment is set to draft, delete related expense entries."""
+        for payment in self:
+            if payment.partner_type == 'supplier':  # Only for supplier payments
+                payment.expense_ids.unlink()  # Delete expense records
+                payment._delete_expense_entries()
+        return super(AccountPayment, self).button_draft()
+
     @api.model_create_multi
     def create(self, vals_list):
-        """ Автоматично заповнює витрати під час створення платежу. """
+        """Automatically populate expenses during payment creation."""
         payments = super(AccountPayment, self).create(vals_list)
         for payment in payments:
-            payment._populate_expenses()
+            if payment.partner_type == 'supplier':  # Only for supplier payments
+                payment._populate_expenses()
         return payments
 
     def write(self, vals):
-        """ Автоматично оновлює витрати при зміні суми платежу або рахунка. """
+        """Automatically update expenses when the payment amount or reconciled invoices change."""
         res = super(AccountPayment, self).write(vals)
-        if 'amount' in vals or 'reconciled_invoice_ids' in vals:
-            self._populate_expenses()
+        for payment in self:
+            if 'amount' in vals or 'reconciled_invoice_ids' in vals:
+                if payment.partner_type == 'supplier':  # Only for supplier payments
+                    payment._populate_expenses()
         return res
 
-    def _populate_expenses(self):
-        """ Заповнює витрати з рядків рахунка у платіж. """
-        for payment in self:
-            payment.expense_ids.unlink()  # Очистити попередні записи витрат
-            if payment.reconciled_invoice_ids:  # Перевірка, чи пов’язаний рахунок
-                for invoice in payment.reconciled_invoice_ids:
-                    for line in invoice.invoice_line_ids:
-                        if invoice.amount_total > 0:
-                            proportion = line.price_subtotal / invoice.amount_total  # Пропорційна сума
-                            expense_amount = proportion * payment.amount  # Частина платежу
-                        else:
-                            expense_amount = line.price_subtotal  # Використати повну суму рядка
-
-                        # Створення запису в моделі витрат
-                        self.env['bs.payment.expense'].create({
-                            'payment_id': payment.id,
-                            'product_id': line.product_id.id,
-                            'total_amount': expense_amount,
-                            'department_id': line.department_id.id,  # Використовує department_id із рядка
-                            'cost_item_id': line.cost_item_id.id,  # Використовує cost_item_id із рядка
-                            'label': line.name or _('No Label'),
-                        })
-
     def action_populate_expenses(self):
-        """ Заповнення витрат вручну через кнопку. """
-        self.ensure_one()  # Переконатися, що викликається лише для одного запису
-        self._populate_expenses()
+        """Manual expense population, available only for supplier payments."""
+        for payment in self:
+            if payment.partner_type == 'supplier':  # Only for supplier payments
+                payment._populate_expenses()
+
+    def _populate_expenses(self):
+        """Populate expenses from supplier invoices into payment."""
+        for payment in self:
+            if payment.partner_type != 'supplier':  # Skip if not supplier payment
+                continue
+
+            payment.expense_ids.unlink()  # Clear previous expenses
+
+            invoices = payment.reconciled_invoice_ids
+            if not invoices:
+                continue  # Skip if no invoices are found
+
+            # Populate expenses based on invoice lines
+            for invoice in invoices:
+                for line in invoice.invoice_line_ids:
+                    expense_amount = 0
+                    if invoice.amount_total > 0:
+                        proportion = line.price_subtotal / invoice.amount_total
+                        expense_amount = proportion * payment.amount
+                    else:
+                        expense_amount = line.price_subtotal
+
+                    # Create expense record
+                    self.env['bs.payment.expense'].create({
+                        'payment_id': payment.id,
+                        'product_id': line.product_id.id,
+                        'total_amount': expense_amount,
+                        'department_id': line.department_id.id if line.department_id else False,
+                        'cost_item_id': line.cost_item_id.id if line.cost_item_id else False,
+                        'label': line.name or _('No Label'),
+                    })
+
+    def _create_expense_entries(self):
+        """Create detailed expense entries in `bs.payment.expense.entry`."""
+        for payment in self:
+            entries = []
+            for invoice in payment.reconciled_invoice_ids:
+                for line in invoice.invoice_line_ids:
+                    if line.cost_item_id and line.cost_item_id.allocate_to_departments:
+                        for department in line.cost_item_id.department_ids:
+                            allocated_amount = (line.price_subtotal * department.percentage) / 100
+                            entries.append({
+                                'account_payment_id': payment.id,
+                                'date': fields.Datetime.now(),
+                                'department_id': department.department_id.id,
+                                'cost_item_id': line.cost_item_id.id,
+                                'amount': allocated_amount,
+                            })
+                    else:
+                        entries.append({
+                            'account_payment_id': payment.id,
+                            'date': fields.Datetime.now(),
+                            'department_id': line.department_id.id,
+                            'cost_item_id': line.cost_item_id.id,
+                            'amount': line.price_subtotal,
+                        })
+            # Bulk create entries
+            if entries:
+                self.env['bs.payment.expense.entry'].create(entries)
+
+    def _delete_expense_entries(self):
+        """Delete all expense entries related to the payment."""
+        self.env['bs.payment.expense.entry'].search([
+            ('account_payment_id', '=', self.id)
+        ]).unlink()
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
 
-    department_id = fields.Many2one(
-        'hr.department',
-        string=_("Department"),
-        help="Department linked to this line.",
-        readonly=False,
-        tracking=True
-    )
-    cost_item_id = fields.Many2one(
-        'bs.cost.item',
-        string=_("Cost Item"),
-        help="Cost item linked to this line.",
-        readonly=False,
-        tracking=True
-    )
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
 
-    department_id = fields.Many2one('hr.department', string=_("Department"))
-    cost_item_id = fields.Many2one('bs.cost.item', string=_("Cost Item"))
 
-    def action_fill_all_lines(self):
-        """Заповнити department_id і cost_item_id у всіх рядках."""
-        for record in self:
-            for line in record.invoice_line_ids:
-                line.department_id = record.department_id.id
-                line.cost_item_id = record.cost_item_id.id
 
-        # Показати повідомлення після заповнення всіх рядків
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Success'),
-                'message': _('All lines have been filled successfully with department and cost item.'),
-                'sticky': False,
-                'type': 'success',
-            }
-        }
 
-    def action_fill_empty_lines(self):
-        """Заповнити department_id і cost_item_id тільки в рядках, де вони порожні."""
-        for record in self:
-            for line in record.invoice_line_ids:
-                if not line.department_id:
-                    line.department_id = record.department_id.id
-                if not line.cost_item_id:
-                    line.cost_item_id = record.cost_item_id.id
 
-        # Показати повідомлення після заповнення порожніх рядків
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Success'),
-                'message': _('Empty lines have been filled successfully with department and cost item.'),
-                'sticky': False,
-                'type': 'success',
-            }
-        }
+

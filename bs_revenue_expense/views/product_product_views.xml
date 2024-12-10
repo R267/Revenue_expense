@@ -5,8 +5,8 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='purchase']" position="inside">
-                <group string="Additional Info">
-                    <field name="department_id"/>
+                <group string="Expenses" invisible="[('move_type', '!=', 'in_invoice')]">
+                    <field name="department_id" />
                     <field name="cost_item_id"/>
                 </group>
             </xpath>

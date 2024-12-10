@@ -17,7 +17,7 @@
     </record>
     <!-- Дія для пункту меню -->
     <record id="action_report_expenses" model="ir.actions.act_window">
-        <field name="name">Звіт по витратах</field>
+        <field name="name">Report on expenses</field>
         <field name="res_model">bs.payment.expense.entry</field>
         <field name="view_mode">tree,pivot</field>
         <field name="context">{}</field>

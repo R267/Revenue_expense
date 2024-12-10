@@ -1,4 +1,4 @@
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 
 class BSCostItemDepartment(models.Model):
     _name = 'bs.cost.item.department'
@@ -22,5 +22,5 @@ class BSCostItemDepartment(models.Model):
     )
 
     _sql_constraints = [
-        ('percent_check', 'CHECK(percent >= 0 AND percent <= 100)', "The percentage must be between 0 and 100."),
+        ('percent_check', 'CHECK(percentage >= 0 AND percentage <= 100)', "The percentage must be between 0 and 100."),
     ]
