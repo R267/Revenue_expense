@@ -10,4 +10,3 @@ class BSPaymentExpenseEntry(models.Model):
     department_id = fields.Many2one('hr.department', string=_("Department"))
     cost_item_id = fields.Many2one('bs.cost.item', string=_("Cost Item"))
     amount = fields.Float(string="Amount")
-

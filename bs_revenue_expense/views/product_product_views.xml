@@ -1,17 +1,20 @@
 <odoo>
+    <!-- Спадкування вигляду product.template для додавання групи Expenses -->
     <record id="view_product_product_form_inherit" model="ir.ui.view">
         <field name="name">product.product.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='purchase']" position="inside">
-                <group string="Expenses" invisible="[('move_type', '!=', 'in_invoice')]">
-                    <field name="department_id" />
+                <group string="Expenses"  invisible="detailed_type not in ['consu', 'product', 'combo']">
+                    <field name="department_id"/>
                     <field name="cost_item_id"/>
+                    <field name="product_variant_count" invisible="1"/>
                 </group>
             </xpath>
         </field>
     </record>
+    <!-- Спадкування вигляду для налаштування поля department_id -->
     <record id="view_product_template_form_inherit" model="ir.ui.view">
         <field name="name">product.template.form.inherit</field>
         <field name="model">product.template</field>

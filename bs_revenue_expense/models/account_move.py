@@ -12,7 +12,8 @@ class AccountMove(models.Model):
             for line in record.invoice_line_ids:
                 line.department_id = record.department_id.id
                 line.cost_item_id = record.cost_item_id.id
-        # Показати повідомлення після заповнення всіх рядків
+
+        # Показати повідомлення після заповнення
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -33,7 +34,7 @@ class AccountMove(models.Model):
                 if not line.cost_item_id:
                     line.cost_item_id = record.cost_item_id.id
 
-        # Показати повідомлення після заповнення порожніх рядків
+        # Показати повідомлення після заповнення
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -53,15 +54,30 @@ class AccountMoveLine(models.Model):
         string=_("Department"),
         help="Department linked to this line.",
         readonly=False,
-        tracking=True
+        tracking=True,
+        compute='_compute_visible_fields',
+        store=True,
     )
     cost_item_id = fields.Many2one(
         'bs.cost.item',
         string=_("Cost Item"),
         help="Cost item linked to this line.",
         readonly=False,
-        tracking=True
+        tracking=True,
+        compute='_compute_visible_fields',
+        store=True,
     )
+
+    @api.depends('move_id.move_type')
+    def _compute_visible_fields(self):
+        """ Відображати поля тільки для рахунків постачальника """
+        for line in self:
+            if line.move_id.move_type == 'in_invoice':
+                line.department_id = line.department_id
+                line.cost_item_id = line.cost_item_id
+            else:
+                line.department_id = False
+                line.cost_item_id = False
 
     @api.onchange('product_id')
     def _onchange_product_id_fill_department_and_cost_item(self):

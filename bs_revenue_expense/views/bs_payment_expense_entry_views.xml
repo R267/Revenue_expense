@@ -1,6 +1,6 @@
 <odoo>
-    <!-- Фільтри для моделі bs.payment.expense.entry -->
-        <record id="view_payment_expense_entry_filter" model="ir.ui.view">
+    <!-- Search View -->
+    <record id="view_payment_expense_entry_filter" model="ir.ui.view">
         <field name="name">payment.expense.entry.search</field>
         <field name="model">bs.payment.expense.entry</field>
         <field name="arch" type="xml">
@@ -8,29 +8,35 @@
                 <field name="date" string="Date"/>
                 <field name="department_id" string="Department"/>
                 <field name="cost_item_id" string="Cost Item"/>
-                <!-- Last 30 Days filter with a fixed date range -->
-                <filter string="Last 30 Days" name="last_30_days" domain="[('date', '>=', '2024-11-01')]"/>  <!-- Replace '2024-10-24' with the actual date 30 days ago -->
-                <!-- This Month filter with dynamic date calculation -->
-                <filter string="This Month" name="this_month" domain="[('date', '>=', '2024-11-01')]"/>  <!-- Replace with the first day of the current month -->
+
+                <!-- Filter for the last 30 days -->
+                <filter string="Last 30 Days" name="last_30_days"
+                        domain="[('date', '>=', (context_today() - (0,0,30)))]"/>
+
+                <!-- Filter for the current month -->
+                <filter string="This Month" name="this_month"
+                        domain="[('date', '>=', (context_today().strftime('%Y-%m-01')))]"/>
             </search>
         </field>
     </record>
-    <!-- Дія для пункту меню -->
-    <record id="action_report_expenses" model="ir.actions.act_window">
-        <field name="name">Report on expenses</field>
+
+    <!-- Action for the menu -->
+     <record id="action_report_expenses" model="ir.actions.act_window">
+        <field name="name">Report on Expenses</field>
         <field name="res_model">bs.payment.expense.entry</field>
         <field name="view_mode">tree,pivot</field>
-        <field name="context">{}</field>
         <field name="search_view_id" ref="view_payment_expense_entry_filter"/>
     </record>
-    <!-- Пункт меню "Звіт по витратах" -->
+
+    <!-- Menu item -->
     <menuitem id="menu_report_expenses"
-              name="Report on expenses"
+              name="Report on Expenses"
               parent="account.menu_finance_reports"
               sequence="10"
               action="action_report_expenses"/>
-    <!-- Список для моделі bs.payment.expense.entry -->
-    <record id="view_payment_expense_entry_tree" model="ir.ui.view">
+
+    <!-- List View for Report -->
+     <record id="view_payment_expense_entry_tree" model="ir.ui.view">
         <field name="name">payment.expense.entry.tree</field>
         <field name="model">bs.payment.expense.entry</field>
         <field name="arch" type="xml">
@@ -43,16 +49,17 @@
             </tree>
         </field>
     </record>
-    <!-- Півот для моделі bs.payment.expense.entry -->
+
+    <!-- Pivot View for Report -->
     <record id="view_payment_expense_entry_pivot" model="ir.ui.view">
-        <field name="name">payment.expense.entry.pivot</field>
-        <field name="model">bs.payment.expense.entry</field>
-        <field name="arch" type="xml">
-            <pivot>
-                <field name="department_id" type="row"/>
-                <field name="cost_item_id" type="row"/>
-                <field name="amount" type="measure"/>
-            </pivot>
-        </field>
-    </record>
+    <field name="name">payment.expense.entry.pivot</field>
+    <field name="model">bs.payment.expense.entry</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="department_id" type="row"/>
+            <field name="cost_item_id" type="row"/>
+            <field name="amount" type="measure"/>
+        </pivot>
+    </field>
+</record>
 </odoo>

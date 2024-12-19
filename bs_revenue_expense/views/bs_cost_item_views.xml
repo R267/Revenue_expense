@@ -9,32 +9,38 @@
               parent="account.menu_finance_configuration"
               action="action_bs_cost_item"
               sequence="999"/>
-
     <record id="view_cost_item_form" model="ir.ui.view">
-        <field name="name">bs.cost.item.form</field>
-        <field name="model">bs.cost.item</field>
-        <field name="arch" type="xml">
-            <form string="Cost Item">
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="description"/>
-                        <field name="allocate_to_departments"/>
-                    </group>
-                    <group invisible="not allocate_to_departments">
-                        <header>
-                            <button name="action_distribute_evenly" type="object" string="Distribute equally" class="btn-primary"/>
-                            <button name="action_add_all_departments" type="object" string="Add all departments" class="btn-secondary"/>
-                        </header>
-                        <field name="department_ids" nolabel="1" colspan="2">
-                            <tree editable="bottom">
-                                <field name="department_id"/>
-                                <field name="percentage"/>
-                            </tree>
-                        </field>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+    <field name="name">bs.cost.item.form</field>
+    <field name="model">bs.cost.item</field>
+    <field name="arch" type="xml">
+        <form string="Cost Item">
+             <header>
+                <button name="action_distribute_evenly"
+                        type="object"
+                        string="Distribute equally"
+                        class="btn-primary"
+                        style="margin-right: 10px;"/>
+                <button name="action_add_all_departments"
+                        type="object"
+                        string="Add all departments"
+                        class="btn-secondary"/>
+            </header>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="allocate_to_departments"/>
+                </group>
+                <group invisible="not allocate_to_departments">
+                    <field name="department_ids" nolabel="1" colspan="2">
+                        <tree editable="bottom">
+                            <field name="department_id"/>
+                            <field name="percentage"/>
+                        </tree>
+                    </field>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
 </odoo>
